@@ -46,3 +46,10 @@ Include the wrapper using a script tag. You can interact with the wrapper using 
 `jsc_file_get` - Gets a JSC file and sends data (array, utf8, or hex) to a callback function.
 <br>
 `jsc_file_eval` - Gets a JSC file and evaluates it, sending the result to a callback function.
+
+## Other Wrapper Features :
+By default the jsc.wasm (or jsc engine) is pulled from https://tristonstuart.github.io/jsc.js%20compiled/jsc.wasm. You can change this by doing `JStoJSC.init({wasmBinaryFile: 'your_url'})`.
+
+The wrapper still allows access to the Module object so you can directly make calls to the jsc engine using cwrap.
+
+The wrapper has `._utils` which contains a function to generate a file download with a name and contents (Could use to download jsc byte code in hex form).
