@@ -10,6 +10,9 @@ let JStoJSC = {
       document.body.removeChild(element);
     }
   },
+  settings: {
+    rawPlainBytes: false
+  },
   Module: {},
   cwrap: () => {},
   initiated: false,
@@ -17,54 +20,90 @@ let JStoJSC = {
     let hexArray = x.match(/.{1,2}/g);
     let plain = "";
     for (i in hexArray){
-      plain += String.fromCharCode( parseInt(hexArray[i], '16') + 1);
+      if (this.settings.rawPlainBytes){
+        plain += String.fromCharCode( parseInt(hexArray[i], '16') );
+      }else {
+        plain += String.fromCharCode( parseInt(hexArray[i], '16') + 183);
+      }
     }
     return plain;
   },
   plainToHex : function(x){
-      let plainArray = x.split('');
-      let hex = "";
-      for (i in plainArray){
-          var _c = (plainArray[i].charCodeAt() - 1).toString(16);
-          if (_c.length == 1){
-              _c = "0" + _c;
-          }
-          hex += _c.toLocaleUpperCase();
+    let plainArray = x.split('');
+    let hex = "";
+    for (i in plainArray){
+      if (this.settings.rawPlainBytes){
+        var _c = plainArray[i].charCodeAt().toString(16);
+      }else {
+        var _c = (plainArray[i].charCodeAt() - 183).toString(16);
       }
-      return hex;
+      if (_c.length == 1){
+        _c = "0" + _c;
+      }
+      hex += _c.toLocaleUpperCase();
+    }
+    return hex;
   },
   UTF8ToHex: function(x){
-      let plainArray = x.split('');
-      let hex = "";
-      for (i in plainArray){
-          var _c = (plainArray[i].charCodeAt() - 1).toString(16);
-          if (_c.length == 1){
-              _c = "0" + _c;
-          }
-          hex += _c.toLocaleUpperCase();
+    let plainArray = x.split('');
+    let hex = "";
+    for (i in plainArray){
+      if (this.settings.rawPlainBytes){
+        var _c = plainArray[i].charCodeAt().toString(16);
+      }else {
+        var _c = (plainArray[i].charCodeAt() - 183).toString(16);
       }
-      return hex;
+      if (_c.length == 1){
+        _c = "0" + _c;
+      }
+      hex += _c.toLocaleUpperCase();
+    }
+    return hex;
   },
   hexToUTF8: function(x){
     let hexArray = x.match(/.{1,2}/g);
     let plain = "";
     for (i in hexArray){
-      plain += String.fromCharCode( parseInt(hexArray[i], '16') + 1);
+      if (this.settings.rawPlainBytes){
+        plain += String.fromCharCode( parseInt(hexArray[i], '16') );
+      }else {
+        plain += String.fromCharCode( parseInt(hexArray[i], '16') + 183);
+      }
     }
     return plain;
   },
-  UTF8ToArray: function(x){
+  UTF8ToArray: function(x, raw){
     let string_array = x.split('');
     let bytecode_array = [];
     for (_i in string_array){
-      bytecode_array.push(string_array[_i].charCodeAt());
+      let _charcode = undefined;
+      if (raw){
+        _charcode = string_array[_i].charCodeAt()
+      }else {
+        _charcode = string_array[_i].charCodeAt() - 183
+      }
+      if (this.settings.rawPlainBytes){
+        bytecode_array.push(_charcode);
+      }else {
+        bytecode_array.push(_charcode + 183);
+      }
     }
     return bytecode_array;
   },
-  arrayToUTF8: function(x){
+  arrayToUTF8: function(x, raw){
     let _str = "";
     for (_i in x){
-      _str += String.fromCharCode(x[_i]);
+      let _charCode = undefined;
+      if (raw){
+        _charCode = x[_i];
+      }else {
+        _charCode = x[_i] - 183;
+      }
+      if (this.settings.rawPlainBytes){
+        _str += String.fromCharCode(_charCode);
+      }else {
+        _str += String.fromCharCode(_charCode + 183);
+      }
     }
     return _str;
   },
