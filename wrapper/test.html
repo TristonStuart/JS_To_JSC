@@ -1,0 +1,81 @@
+<html>
+	<head>
+		<script src="js_to_jsc.js"></script>
+		<script>
+			window.onload = function(){
+				if (!JStoJSC){
+					console.error('JStoJSC is not loaded!');
+					document.getElementById('output').value = 'JStoJSC is not loaded';
+					return;
+				}
+
+				JStoJSC.init();
+
+				var input = document.getElementById('input');
+				var output = document.getElementById('output');
+				var comp = document.getElementById('comp');
+				var tojsc = document.getElementById('tojsc');
+				var js_eval = document.getElementById('js_eval');
+				var jsc_eval = document.getElementById('jsc_eval');
+				var file_get = document.getElementById('file_get');
+
+				comp.onclick = function(){
+					var text = input.value;
+					var out = JStoJSC.js_compile(text);
+					if (typeof out == 'object'){
+						out = JSON.stringify(out);
+					}
+					output.value = out;
+				}
+
+				tojsc.onclick = function(){
+					var text = input.value;
+					var out = JStoJSC.js_to_jsc(text);
+					if (typeof out == 'object'){
+						out = JSON.stringify(out);
+					}
+					output.value = (out)? out :  'Compiled to a .jsc file';
+				}
+
+				js_eval.onclick = function(){
+					var text = input.value;
+					var out = JStoJSC.js_eval(text);
+					if (typeof out == 'object'){
+						out = JSON.stringify(out);
+					}
+					output.value = out;
+				}
+
+				jsc_eval.onclick = function(){
+					var text = input.value;
+					var out = JStoJSC.jsc_eval(text);
+					if (typeof out == 'object'){
+						out = JSON.stringify(out);
+					}
+					output.value = out;
+				}
+
+				file_get.onclick = function(){
+					var text = input.value;
+					output.value = 'Getting file...';
+					JStoJSC.jsc_file_get(text, (e) => {
+						output.value = e;
+					});
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<p>Input :</p>
+		<textarea id="input" style="width:20%;height:20%"></textarea>
+		<p>Output : </p>
+		<textarea id="output" readonly="readonly" style="width:20%;height:20%"></textarea>
+		<br>
+		<br>
+		<button id="comp">JS Compile</button>
+		<button id="tojsc">JS to .jsc</button>
+		<button id="js_eval">JS Eval</button>
+		<button id="jsc_eval">JSC Eval</button>
+		<button id="file_get">Get JSC File (from url)</button>
+	</body>
+</html>
