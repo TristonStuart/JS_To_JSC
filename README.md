@@ -1,4 +1,5 @@
 # JS To JSC
+A wrapper by Triston Stuart for JSC.js
 
 ## About
 Ran in the web-browser with web assembly. <br>
