@@ -5,6 +5,8 @@ Ran in the web-browser with web assembly. <br>
 This is a wrapper for JSC.js (https://github.com/mbbill/JSC.js) to make it easier to convert js to jsc bytecode.
 
 ## Pitfalls
+You can not use the `new` operator at this time. This is a bug with compiling js to jsc. Unfortunately mbbill will have to wait for webkit to make an update to fix this.
+
 The jsc bytecode is ran through a jsc engine in web assembly. This will mean that performance is slower. It is also not possible for js that is running in the jsc engine to access variables running in the normal js engine. Hopefully someone will add this feature but as of now this is not possible.
 
 ## Passing Data
