@@ -1,8 +1,20 @@
 let JStoJSC = {
   _utils: {
+    encodeURI: function(x){
+      let plainArray = x.split('');
+      let hex = "";
+      for (i in plainArray){
+        var _c = plainArray[i].charCodeAt().toString(16);
+        if (_c.length == 1){
+          _c = "0" + _c;
+        }
+        hex += '%' + _c.toLocaleUpperCase();
+      }
+      return hex;
+    },
     downloadFile: function(name, content){
       let element = document.createElement('a');
-      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content));
+      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + this.encodeURI(content));
       element.setAttribute('download', name);
       element.style.display = 'none';
       document.body.appendChild(element);
@@ -106,6 +118,22 @@ let JStoJSC = {
       }
     }
     return _str;
+  },
+  UTF8toRaw: function(x){
+    var _arrUtf8 = this.UTF8ToArray(x);
+    var _arr = [];
+    for (_i in _arrUtf8){
+      _arr.push(_arrUtf8[_i] - 183);
+    }
+    return this.arrayToUTF8(_arr);
+  },
+  rawToUTF8: function(x){
+    var _arrRaw = this.UTF8ToArray(x);
+    var _arr = [];
+    for (_i in _arrRaw){
+      _arr.push(_arrRaw[_i] + 183);
+    }
+    return this.arrayToUTF8(_arr);
   },
   init: function (defaults){
     this.initiated = true;

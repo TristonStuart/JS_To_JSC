@@ -33,6 +33,10 @@ Include the wrapper using a script tag. You can interact with the wrapper using 
 <br>
 `arrayToUTF8` - Converts a char code array to a utf8 string.
 <br>
+`UTF8toRaw` - Converts plain (aka shifted) UTF8 to 0-255 "raw" UTF8.
+<br>
+`rawToUTF8` - Converts "raw" UTF8 to plain UTF8.
+<br>
 `init` - Downloads and hooks jsc engine.
 <br>
 `js_compile` - Compiles JS to JSC.
@@ -62,10 +66,28 @@ There are a few forms of JSC byte code. JSC is just bytes ranging from 0-255 and
 <br>
 `Hex` - Two chars representing a hex number from 0-255. This is used by the jsc engine natively to convert to an array of bytes for execution. Although this is twice as long as a UTF8 encoding.
 <br>
-`UTF8 / Plain` - Hex number representation as a UTF8 character. Instead of using UTF8 chars from 0-255 the range is shifted to 183-438. This helps prevent issues when copying/pasting jsc byte code.
+`UTF8-Plain` - Hex number representation as a UTF8 character. Instead of using UTF8 chars from 0-255 the range is shifted to 183-438. This helps prevent issues when copying/pasting jsc byte code.
 <br>
-`Raw UTF8` - UTF8 Encoding that is in the range 0-255. This form is extremely hard to work with but represents the raw bytes of jsc.
+`UTF8-Raw` - UTF8 Encoding that is in the range 0-255. This form is extremely hard to work with but represents the raw bytes of jsc.
 <br>
 `Array` - Bytes of jsc in an array. (Non Raw Array will have the bytes shifted by +183)
 <br>
 `Raw Array` - Raw bytes of jsc in an array. (This is non shifted and is in the range of 0-255)
+
+### .JSC Files
+Storing jsc byte code as a .jsc file is a convenient way to store and load your byte code.
+<br>
+<br>
+Although there are a few things to note. You can store .jsc files as any jsc encoding (although only UTF8-Plain is technically supported).
+<br>
+<br>
+`UTF8-Plain` is the default to be used in `jsc_file_get` and `jsc_file_eval`.
+<br>
+<br>
+`UTF8-Raw` is 2x more compact than `UTF8-Plain` but you can not copy and paste the contents and you will have to manually evaluate the file by doing `jsc_file_get` with the callback function getting the `UTF8-Plain` with `rawToUTF8`. After that you can use `jsc_eval`.
+<br>
+<br>
+`Hex` is beneficial if you can not use UTF-8 Chars. Although it takes up 2x more size than `UTF8-Plain` and 4x more size than `UTF8-Raw`
+<br>
+<br>
+`Array` is not beneficial as it takes more size than `Hex` and any `UTF8` plus all other encodings can be converted to array.
